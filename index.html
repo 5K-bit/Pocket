@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d13" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="OBEOS Pocket" />
+  <meta name="description" content="OBEOS Pocket: your mobile launchpad for tools, learning, and deployments." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.png" sizes="192x192" type="image/png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./app.js" defer></script>
+  <title>OBEOS Pocket | Blackfong</title>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div class="brand-row">
+        <div class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="brand-names"><span class="eyebrow">BLACKFONG / MOBILE SYSTEMS</span><strong>OBEOS<span class="brand-dot">.</span></strong></div>
+        <div class="edition">POCKET <span>0.1.1</span></div>
+      </div>
+      <div class="topline"><span class="section-index">[ 01 / COMMAND ACCESS ]</span><span class="time" id="local-clock" aria-label="Local time">--:--</span></div>
+      <div class="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-grid" aria-hidden="true"></div>
+        <p class="hero-overline"><span class="small-indicator"></span>YOUR OPERATOR WORKSPACE</p>
+        <h1>One device.<br /><em>Every system.</em></h1>
+        <p class="hero-sub">A mobile launch point for your projects, tools, and daily workflow. No accounts or backend required for this dashboard.</p>
+        <div class="hero-footer"><span class="active-label"><span class="live-dot"></span> LAUNCHER READY</span><span class="hero-version">V0.1.1 / STATIC</span></div>
+      </div>
+    </header>
+    <section class="tools" aria-labelledby="tools-title">
+      <div class="section-top"><div><p class="section-index">[ 02 / DESTINATIONS ]</p><h2 id="tools-title">Your shortcuts</h2></div><button class="edit-button" id="edit-links" type="button" aria-label="Edit shortcut URLs">EDIT LINKS <span aria-hidden="true">↗</span></button></div>
+      <div class="tool-grid" id="tool-grid" aria-live="polite"></div>
+    </section>
+    <section class="ops" aria-labelledby="ops-title">
+      <div class="section-top"><div><p class="section-index">[ 03 / OPERATIONS ]</p><h2 id="ops-title">Operator notes</h2></div></div>
+      <div class="note-row"><span class="note-symbol">01</span><div><strong>Tools, not telemetry</strong><p>This launcher opens links. It does not claim your machines or services are online.</p></div></div>
+      <div class="note-row"><span class="note-symbol">02</span><div><strong>Private by design</strong><p>Your link edits are saved on this device. Never enter passwords, API keys, or tokens as URLs.</p></div></div>
+      <div class="note-row"><span class="note-symbol">03</span><div><strong>Ready for the next layer</strong><p>When you deploy authenticated APIs, this can become your real mobile command center.</p></div></div>
+    </section>
+    <footer><span>OBEOS / BLACKFONG</span><span id="network-label">NETWORK STATUS UNVERIFIED</span></footer>
+  </main>
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="editor-form">
+      <div class="dialog-head"><div><span class="eyebrow">CONFIGURATION / LOCAL ONLY</span><h2 id="editor-title">Edit destinations</h2></div><button type="button" id="close-editor" class="close-btn" aria-label="Close editor">×</button></div>
+      <p class="dialog-hint">Enter HTTPS URLs for the destinations you use. These settings are stored only in this browser's local storage.</p>
+      <div id="editor-fields"></div>
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button type="button" class="reset-btn" id="reset-links">Restore defaults</button><button type="submit" class="save-btn">Save links</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

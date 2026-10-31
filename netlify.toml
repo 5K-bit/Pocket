@@ -1,0 +1,3 @@
+# OBEOS Pocket is a static app. Netlify publishes repo root without a build command.
+[build]
+  publish = "."
