@@ -1,46 +1,77 @@
-# OBEOS Pocket
+<div align="center">
 
-**OBEOS Pocket v0.1.1** is a lightweight, offline-capable iPhone Home Screen launcher for the Blackfong ecosystem. It is a static Progressive Web App (PWA): no build process, API token, external scripts, or server-side runtime is required.
+<img src="assets/brand/github-banner.svg" alt="Pocket — One device. Every system. An OBEOS mobile launchpad." width="1200">
 
-## Features
+**One device. Every system. A mobile launchpad for the tools and projects you run.**
 
-- Open OBEOS company website, the Pocket source repo, OBEOS main repo, GitHub projects, Netlify, ChatGPT, or a configured Legion / DAISE HTTPS endpoint.
-- Customize destinations using **Edit Links**. Browser local storage is per-device and does not sync or get committed to GitHub.
-- Add from Safari to the iOS Home Screen as a standalone web app.
-- Service worker stores the launcher shell for offline use and prefers fresh assets when the device is online.
-- Security headers and HTTPS-only custom destination validation.
+[![CI](https://img.shields.io/github/actions/workflow/status/5K-bit/Pocket/validate.yml?branch=main&style=for-the-badge&label=CI&labelColor=10252a&color=43e3dc)](https://github.com/5K-bit/Pocket/actions/workflows/validate.yml)
+![Web app](https://img.shields.io/badge/platform-iPhone%20%2F%20web-43e3dc?style=for-the-badge&labelColor=10252a)
+![Build](https://img.shields.io/badge/build-none-b6fff7?style=for-the-badge&labelColor=10252a)
+![Local first](https://img.shields.io/badge/local--first-link%20settings%20on%20device-98b9bc?style=for-the-badge&labelColor=10252a)
 
-## Repository layout
+</div>
 
-All runtime files live in the **repository root**, not a nested project directory.
+[Overview](#overview) · [Quick start](#quick-start) · [Architecture](#architecture) · [Validation](#validation-and-evidence) · [Limitations](#limitations)
 
+---
+
+## Overview
+
+**Pocket** is the lightweight, installable **mobile entry point to the OBEOS / Blackfong ecosystem**. It puts your existing websites, source repositories, Netlify deployments, learning resources and configured dashboards behind a single Home Screen icon. Its purpose is **access, not automation or remote system control**.
+
+Part of the OBEOS product family (**Mobile / 09**). Pocket is a standalone static Progressive Web App; it needs **no server, account, app-store distribution, build pipeline, or runtime package dependencies** to run. A service worker caches the app shell for offline launch, but external destinations still need their own connectivity.
+
+> **Privacy boundary:** Link edits stay in browser `localStorage` on the current device. They are not encrypted, backed up, or synced; do not put credentials or tokens in destination URLs.
+
+## What it does
+
+| Capability | Current behavior |
+|---|---|
+| Install on iPhone | Safari **Share → Add to Home Screen**, then open as a web app when offered |
+| Launch projects | Open configured OBEOS, GitHub, Netlify, ChatGPT and Legion / DAISE links |
+| Customize destinations | **Edit Links** validates HTTPS URLs and saves them locally |
+| Open offline | Cached launcher assets work after a successful online load; linked services may not |
+| Deploy | Static repository root publishes to Netlify using `netlify.toml` |
+| Validate | Node syntax checks and a Python stdlib deployment validator run in GitHub Actions |
+
+**Not provided in v0.1.1:** live service health, authentication to OBEOS APIs, SSH, command execution, synchronized preferences, or notifications.
+
+## Quick start
+
+Use the current Netlify deployment if you have already linked it to this repository's `main` branch. Or serve a local development copy:
+
+```sh
+git clone https://github.com/5K-bit/Pocket.git
+cd Pocket
+python3 -m http.server 8000
+# Open http://localhost:8000
 ```
-index.html              HTML launcher
-styles.css              Responsive styling
-app.js                  Tiles and local link editor
-manifest.webmanifest    Install metadata
-service-worker.js       Offline shell and asset refresh
-icons/                  iOS / PWA icons
-_headers                Netlify security and cache headers
-netlify.toml            Publish the repository root
-.github/workflows/      GitHub source validation
-scripts/                Local static validation
+
+The service worker works on HTTPS or localhost. Opening `index.html` directly from Files will not provide the complete install/offline behavior.
+
+To deploy from Git: connect the **existing** OBEOS Pocket site in Netlify to **`5K-bit/Pocket`**, production branch **`main`**. The repository sets `[build] publish = "."`; no build command is required. Verify a **Published** deploy and test the same site URL on your iPhone before assuming a push has gone live.
+
+**iPhone source workflow:** clone in Working Copy → edit files → commit and push to `main` → verify Netlify deployment → reopen Pocket. GitHub stores the code; Netlify hosts the site; the iPhone retains its own customized destinations.
+
+## Architecture
+
+```text
+Safari / iOS Home Screen
+         |
+         v
+      Pocket PWA
+      index.html + styles.css + app.js
+         |                    |
+         |                    +--> localStorage (editable link destinations)
+         |
+         +--> service-worker.js --> Cache Storage (offline launcher shell)
+         |
+         +--> HTTPS links --> OBEOS site / GitHub / Netlify / ChatGPT / custom endpoints
 ```
 
-## Connect an EXISTING Netlify site to GitHub (one-time setup)
+This is a **static link launcher**: no external API calls or remote command surface is built into Pocket. Network availability reported by the browser is not the same as service availability.
 
-Uploading code to GitHub **does not automatically update** a site originally deployed using Netlify Drop. You must connect the existing Netlify site to the repo once:
-
-1. Open your **existing** renamed OBEOS Pocket site in the Netlify dashboard (do not create another site).
-2. Open **Project configuration → Developer settings → Continuous deployment → Repository**. Select **Link repository**.
-3. Choose GitHub, select `5K-bit/Pocket`, and set the production branch to `main`.
-4. Use **Base directory: blank**, **Build command: blank**, **Publish directory: `.`**. The repo includes `netlify.toml` with the publish directory.
-5. Save, then deploy the branch from the Netlify dashboard if it does not deploy automatically.
-6. Verify the **same existing site URL** now shows `V0.1.1 / STATIC` and the **Pocket Source** shortcut. From then on, subsequent pushes to the configured production branch should trigger Netlify deploys.
-
-If Netlify does not offer the Link repository option, see https://docs.netlify.com/build/git-workflows/repo-permissions-linking/ for the current workflow. Do not create a new site unless intentionally changing the public URL; existing iPhone shortcuts target the old domain.
-
-## Local validation
+## Validation and evidence
 
 ```sh
 node --check app.js
@@ -48,14 +79,45 @@ node --check service-worker.js
 python3 scripts/validate.py
 ```
 
-A successful validation checks runtime references, the manifest, icons, expected security settings, the Netlify configuration, and the GitHub workflow.
+The `Validate PWA` GitHub workflow runs these checks on pushes and pull requests. The validator verifies required assets, icon presence, manifest configuration, Netlify publish root, declared security headers and core source references. **These are static checks**, not automated iPhone/Safari acceptance tests.
 
-## iPhone workflow
+| Claim | Evidence |
+|---|---|
+| Static deploy layout is coherent | [`scripts/validate.py`](scripts/validate.py) and [`netlify.toml`](netlify.toml) |
+| Browser source passes syntax checks | [CI workflow](.github/workflows/validate.yml) |
+| Local HTTPS destination validation | [`app.js`](app.js) |
+| Offline shell and cache replacement behavior | [`service-worker.js`](service-worker.js) |
+| App identity and iOS icon references | [`manifest.webmanifest`](manifest.webmanifest), [`index.html`](index.html) |
 
-- Open your existing Netlify URL in Safari → Share → Add to Home Screen → **Open as Web App** if available.
-- To update source from iPhone: clone this repository in Working Copy; edit and commit; push to `main`; check Netlify Deploys; refresh the Home Screen app.
-- If the app appears unchanged after deployment, fully close and reopen it while online. If needed, open the site in Safari and reload; service worker update and tab lifecycle on iOS can delay replacing the active shell.
+## Limitations
 
-## Security boundaries
+- **Launcher only.** Pocket does not test if your OBEOS, Legion or DAISE services are reachable, healthy or authorized.
+- **Offline means shell only.** GitHub, Netlify and your custom destinations require the relevant network access. A first visit must complete before the shell can be cached.
+- **Device-local preferences.** Clearing website data, reinstalling or switching browsers may erase customized destinations.
+- **Updates can appear delayed on iOS.** Reopen Pocket while online after a deployment; Safari may keep an older service-worker-controlled page until it is replaced.
+- **HTTPS-only is not a trust guarantee.** You choose the destination. Avoid credential-bearing URLs and unauthenticated administrative endpoints.
+- **No dedicated iOS end-to-end CI yet.** Validate Home Screen installation, safe-area layout, navigation and offline behavior manually.
 
-**This version is a launcher, not a remote machine control system or availability monitor.** There is no authorization backend and no service-health probe. Never put passwords, token-bearing URLs, or unauthenticated admin endpoints in a destination. Add authenticated APIs, authorization, audit logs and explicit command approvals before enabling remote actions. A private Tailscale address alone is not enough to secure an administrative API.
+## Roadmap
+
+- [x] Installable branded iPhone launcher
+- [x] Local destination editor and offline-capable shell
+- [x] Static validation and GitHub-driven Netlify deployment configuration
+- [ ] Repeatable iOS/Safari acceptance evidence
+- [ ] Optional authenticated **read-only** service health
+- [ ] Explicitly approved actions via an authenticated, audited OBEOS gateway (later phase; not implemented)
+
+## Development practice
+
+AI tools assist with implementation, debugging, tests and documentation in this project.  
+Louis Boddie owns direction and acceptance decisions; linked tests and evidence document what is verified.
+
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). Report vulnerabilities privately using GitHub's security reporting flow if available, rather than posting credentials or exploit details in public issues.
+
+## Brand system
+
+Pocket belongs to the same **“BY OBEOS”** numbered product family as Blackbox, Casefile and ShiftLedger; its product-specific accent is **electric teal**. The editable GitHub banner and GitHub social-preview guidance are in [`assets/brand`](assets/brand/README.md).
+
+**License status:** no open-source license is declared yet. Public visibility does not itself grant reuse or distribution rights. Do not assume this repository is Apache-2.0 merely because some other OBEOS repositories are.

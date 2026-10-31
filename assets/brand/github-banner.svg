@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+<title id="title">Pocket — Your OBEOS systems, one tap away</title>
+<desc id="desc">A mobile launchpad for the Blackfong ecosystem. Brand family: by OBEOS. Accent: electric teal.</desc>
+<defs>
+  <linearGradient id="surface" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c1220"/><stop offset="1" stop-color="#101f27"/></linearGradient>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#b7fffa" stroke-opacity=".055"/></pattern>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#12313a"/><stop offset="1" stop-color="#0b1620"/></linearGradient>
+</defs>
+<rect width="1200" height="400" rx="18" fill="url(#surface)"/><rect width="1200" height="400" rx="18" fill="url(#grid)"/>
+<path d="M48 40h42" stroke="#43e3dc" stroke-width="5"/>
+<text x="106" y="46" fill="#c5cddb" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">BY OBEOS</text>
+<text x="48" y="114" fill="#43e3dc" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">MOBILE / 09</text>
+<text x="44" y="194" fill="#f3f5fa" font-family="Arial, sans-serif" font-size="78" font-weight="700" letter-spacing="-2">Pocket</text>
+<text x="48" y="245" fill="#e0e6ef" font-family="Arial, sans-serif" font-size="27">One device. Every system.</text>
+<text x="48" y="284" fill="#99a7bc" font-family="Arial, sans-serif" font-size="20">Your OBEOS tools and workspaces, one tap away.</text>
+<g transform="translate(941 34)">
+  <rect x="5" y="0" width="183" height="302" rx="35" fill="#0a151e" stroke="#43e3dc" stroke-width="3"/>
+  <rect x="20" y="25" width="153" height="252" rx="20" fill="url(#screen)" stroke="#294b57"/>
+  <rect x="72" y="10" width="50" height="6" rx="3" fill="#32545d"/>
+  <text x="36" y="57" fill="#edf4f7" font-family="Arial, sans-serif" font-weight="700" font-size="17">OBEOS.</text>
+  <text x="36" y="81" fill="#43e3dc" font-family="monospace" font-size="9" letter-spacing="1">POCKET / V0.1</text>
+  <rect x="36" y="101" width="55" height="57" rx="8" fill="#192b35" stroke="#3b7072"/>
+  <rect x="101" y="101" width="55" height="57" rx="8" fill="#192b35" stroke="#3b7072"/>
+  <rect x="36" y="169" width="55" height="57" rx="8" fill="#192b35" stroke="#3b7072"/>
+  <rect x="101" y="169" width="55" height="57" rx="8" fill="#192b35" stroke="#3b7072"/>
+  <g fill="#43e3dc"><rect x="47" y="112" width="15" height="15" rx="2"/><circle cx="129" cy="119" r="9" fill="none" stroke="#43e3dc" stroke-width="3"/><path d="M46 190h27v21H46z" fill="none" stroke="#43e3dc" stroke-width="3"/><path d="M116 196l12-12 12 12-12 12z"/></g>
+  <g fill="#b6cbd0" font-family="Arial, sans-serif" font-size="8"><text x="43" y="145">SYSTEMS</text><text x="110" y="145">SOURCE</text><text x="45" y="216">TOOLS</text><text x="107" y="216">DAISE</text></g>
+  <path d="M73 263h46" stroke="#87a5aa" stroke-width="4" stroke-linecap="round"/>
+</g>
+<path d="M48 331h1104" stroke="#283345"/>
+<text x="48" y="366" fill="#99a7bc" font-family="Arial, sans-serif" font-size="15" letter-spacing="2">LOCAL SYSTEMS. CLEAR PURPOSE.</text>
+<text x="1106" y="366" fill="#43e3dc" font-family="Arial, sans-serif" font-size="17" font-weight="700">5K</text>
+</svg>
