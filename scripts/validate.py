@@ -27,4 +27,7 @@ for icon in manifest["icons"]:
     assert icon_path.is_file() and icon_path.stat().st_size, f"Missing icon: {icon_path}"
 assert "obeos-pocket-shell-v2" in service_worker
 assert "https://github.com/5K-bit/Pocket" in (root / "app.js").read_text()
+version = re.search(r"POCKET <span>([0-9.]+)</span>", html).group(1)
+assert f"v{version}" in (root / "README.md").read_text(encoding="utf-8"), "README version differs from index.html"
+assert (root / "docs/releases" / f"v{version}.md").is_file(), f"Missing docs/releases/v{version}.md"
 print("OBEOS Pocket static validation: PASS")
