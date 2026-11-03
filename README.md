@@ -34,7 +34,7 @@ Part of the OBEOS product family (**Mobile / 09**). Pocket is a standalone stati
 | Deploy | Static repository root publishes to Netlify using `netlify.toml` |
 | Validate | Node syntax checks and a Python stdlib deployment validator run in GitHub Actions |
 
-**Not provided in v0.1.1:** live service health, authentication to OBEOS APIs, SSH, command execution, synchronized preferences, or notifications.
+**Not provided in v0.2.0:** live service health, authentication to OBEOS APIs, SSH, command execution, synchronized preferences, or notifications.
 
 ## Quick start
 

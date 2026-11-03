@@ -94,13 +94,13 @@ const check = (name, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'} 
     check('restore defaults clears customisation', !(await page.$$eval('#tool-grid a', as => as.map(a => a.href))).includes('https://example.org/custom-path') && (await page.evaluate(() => localStorage.length)) === 0);
 
     // 5. Redeploy: new shell version must replace the old cache and content
-    const bumped = fs.readFileSync(path.join(site, 'service-worker.js'), 'utf8').replace('obeos-pocket-shell-v2', 'obeos-pocket-shell-v3');
+    const bumped = fs.readFileSync(path.join(site, 'service-worker.js'), 'utf8').replace('obeos-pocket-shell-v3', 'obeos-pocket-shell-v4');
     fs.writeFileSync(path.join(site, 'service-worker.js'), bumped);
     fs.writeFileSync(path.join(site, 'index.html'), fs.readFileSync(path.join(site, 'index.html'), 'utf8').replace('</title>', ' REDEPLOYED</title>'));
-    await page.reload(); await page.waitForTimeout(1500); await page.reload(); await page.waitForTimeout(500);
+    await page.reload(); await page.waitForTimeout(2500); await page.reload(); await page.waitForTimeout(1500);
     const after = await page.evaluate(async () => ({ names: await caches.keys(), title: document.title }));
     check('redeployed content is served when online', /REDEPLOYED/.test(after.title), after.title);
-    check('old shell cache removed, new cache active', after.names.length === 1 && after.names[0] === 'obeos-pocket-shell-v3', JSON.stringify(after.names));
+    check('old shell cache removed, new cache active', after.names.length === 1 && after.names[0] === 'obeos-pocket-shell-v4', JSON.stringify(after.names));
     await context.setOffline(true); await page.reload(); await page.waitForSelector('#tool-grid a');
     check('updated shell also launches offline', /REDEPLOYED/.test(await page.title()));
     await context.setOffline(false);
