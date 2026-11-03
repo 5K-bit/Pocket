@@ -120,4 +120,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). Report vu
 
 Pocket belongs to the same **“BY OBEOS”** numbered product family as Blackbox, Casefile and ShiftLedger; its product-specific accent is **electric teal**. The editable GitHub banner and GitHub social-preview guidance are in [`assets/brand`](assets/brand/README.md).
 
-**License status:** no open-source license is declared yet. Public visibility does not itself grant reuse or distribution rights. Do not assume this repository is Apache-2.0 merely because some other OBEOS repositories are.
+**License:** Apache-2.0. See [LICENSE](LICENSE).
