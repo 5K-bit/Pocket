@@ -2,7 +2,7 @@
 
 ## Scope
 
-Pocket v0.1.1 is a **static launcher**, not a remote management interface. It provides no accounts, server API, token store, device control, or service-health monitoring.
+Pocket v0.2.0 is a **static launcher**, not a remote management interface. It provides no accounts, server API, token store, device control, or service-health monitoring.
 
 ## Boundaries and caveats
 

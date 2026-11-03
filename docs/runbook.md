@@ -11,4 +11,4 @@
 
 **Common failures:** edits not saving → private browsing/storage blocked; stale version → open online twice (the service worker is network-first); "Use an HTTPS URL" → remove `http://` or embedded credentials.
 **Recovery:** *Restore defaults* in the editor; or delete the Home Screen icon and re-add it. **Rollback:** redeploy the previous release ZIP / commit on Netlify.
-**Data:** only destination URLs in local storage; never put tokens in URLs. **Version:** shown on the page (`POCKET 0.1.1`). **Support:** https://github.com/5K-bit/Pocket/issues
+**Data:** only destination URLs in local storage; never put tokens in URLs. **Version:** shown on the page (`POCKET 0.2.0`). **Support:** https://github.com/5K-bit/Pocket/issues

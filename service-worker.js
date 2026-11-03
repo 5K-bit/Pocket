@@ -1,6 +1,6 @@
 'use strict';
 // Increment the version when changing the offline shell or cache behavior.
-const CACHE = 'obeos-pocket-shell-v2';
+const CACHE = 'obeos-pocket-shell-v3';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', event => {

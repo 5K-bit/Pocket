@@ -25,7 +25,7 @@ for attr, path in re.findall(r'(?i)(src|href)="(\./[^"#?]+)"', html):
 for icon in manifest["icons"]:
     icon_path = root / icon["src"].removeprefix("./")
     assert icon_path.is_file() and icon_path.stat().st_size, f"Missing icon: {icon_path}"
-assert "obeos-pocket-shell-v2" in service_worker
+assert "obeos-pocket-shell-v3" in service_worker
 assert "https://github.com/5K-bit/Pocket" in (root / "app.js").read_text()
 version = re.search(r"POCKET <span>([0-9.]+)</span>", html).group(1)
 assert f"v{version}" in (root / "README.md").read_text(encoding="utf-8"), "README version differs from index.html"

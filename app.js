@@ -1,12 +1,17 @@
 'use strict';
 
 const STORAGE_KEY = 'obeos-pocket-links-v1';
+// Earlier releases shipped this address, which no longer resolves. A saved copy of it is treated as "not customised".
+const LEGACY_URLS = { site: ['https://obeos-company-website.netlify.app/'] };
 const DEFAULTS = [
-  { id: 'site', name: 'OBEOS Website', initials: 'O', category: 'PUBLIC WEB', url: 'https://obeos-company-website.netlify.app/', hint: 'Company website' },
+  { id: 'link', name: 'THE LINK', initials: 'L', category: 'CREW', url: 'https://linkinobeos.netlify.app/', hint: 'Chat, plans and video for the crew' },
+  { id: 'citygrid', name: 'CityGrid', initials: 'C', category: 'CREW', url: 'https://citygrid.netlify.app/', hint: 'Shared city board' },
+  { id: 'site', name: 'OBEOS Website', initials: 'O', category: 'PUBLIC WEB', url: 'https://obeosite.netlify.app/', hint: 'Company website' },
   { id: 'pocket', name: 'Pocket Source', initials: 'P', category: 'SOURCE', url: 'https://github.com/5K-bit/Pocket', hint: 'This app on GitHub' },
   { id: 'repo', name: 'OBEOS Repository', initials: '</>', category: 'SOURCE', url: 'https://github.com/5K-bit/O.B.E.O.S', hint: 'OS development' },
   { id: 'github', name: 'GitHub Projects', initials: 'GH', category: 'SOURCE', url: 'https://github.com/5K-bit?tab=repositories', hint: 'All repositories' },
   { id: 'netlify', name: 'Netlify', initials: 'N', category: 'DEPLOYMENTS', url: 'https://app.netlify.com/', hint: 'Manage web deployments' },
+  { id: 'supabase', name: 'Supabase', initials: 'S', category: 'DEPLOYMENTS', url: 'https://supabase.com/dashboard', hint: 'Databases and auth' },
   { id: 'chatgpt', name: 'ChatGPT', initials: 'AI', category: 'LEARNING', url: 'https://chatgpt.com/', hint: 'Scheduled conversations' },
   { id: 'legion', name: 'Legion / DAISE', initials: 'D', category: 'YOUR ENDPOINT', url: '', hint: 'Add your secure dashboard URL' }
 ];
@@ -21,7 +26,7 @@ function readLinks() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     if (!stored || typeof stored !== 'object' || Array.isArray(stored)) return {};
-    return Object.fromEntries(DEFAULTS.map(({id}) => [id, (typeof stored[id] === 'string' && validURL(stored[id])) ? stored[id] : undefined]));
+    return Object.fromEntries(DEFAULTS.map(({id}) => [id, (typeof stored[id] === 'string' && validURL(stored[id]) && !(LEGACY_URLS[id] || []).includes(stored[id])) ? stored[id] : undefined]));
   } catch { return {}; }
 }
 let customLinks = readLinks();
@@ -66,13 +71,15 @@ function showEditor() {
     const label = document.createElement('label'); label.className = 'edit-field';
     const title = document.createElement('span'); title.textContent = item.name;
     const input = document.createElement('input'); input.name = item.id; input.type = 'url'; input.inputMode = 'url'; input.autocapitalize = 'off'; input.autocomplete = 'off'; input.spellcheck = false; input.placeholder = 'https://example.com'; input.value = currentURL(item);
-    const hint = document.createElement('small'); hint.textContent = 'HTTPS only. Leave blank to mark unconfigured.';
+    const hint = document.createElement('small'); hint.textContent = item.url ? `Default: ${item.url}` : 'HTTPS only. Leave blank to mark unconfigured.';
     label.append(title, input, hint); fields.append(label);
   }
   if (!editor.open) editor.showModal();
+  fields.querySelector('input')?.focus({ preventScroll: true });
 }
 document.querySelector('#edit-links').addEventListener('click', showEditor);
 document.querySelector('#close-editor').addEventListener('click', () => editor.close());
+editor.addEventListener('click', event => { if (event.target === editor) editor.close(); });
 form.addEventListener('submit', event => {
   event.preventDefault();
   const next = {};
@@ -102,7 +109,17 @@ function updateNetwork() {
   const label = document.querySelector('#network-label');
   label.textContent = navigator.onLine ? 'DEVICE REPORTS CONNECTED' : 'DEVICE REPORTS OFFLINE';
 }
-render(); updateClock(); updateNetwork(); setInterval(updateClock, 30_000);
+function showInstallHint() {
+  const standalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const box = document.querySelector('#install-hint');
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('obeos-pocket-install-dismissed') === '1'; } catch { /* private mode */ }
+  if (!box || standalone || !ios || dismissed) return;
+  box.hidden = false;
+  box.querySelector('button').addEventListener('click', () => { box.hidden = true; try { localStorage.setItem('obeos-pocket-install-dismissed', '1'); } catch { /* ignore */ } });
+}
+render(); showInstallHint(); updateClock(); updateNetwork(); setInterval(updateClock, 30_000);
 window.addEventListener('online', updateNetwork); window.addEventListener('offline', updateNetwork);
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
