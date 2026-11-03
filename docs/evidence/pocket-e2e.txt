@@ -1,0 +1,22 @@
+### 2026-11-02T17:26:08Z Pocket browser acceptance, commit 9867c92, headless Chromium via Playwright (desktop, NOT iOS Safari)
+PASS  renders default tiles  -- 6 tiles
+PASS  every tile link is https without credentials
+PASS  every tile opens safely (noopener noreferrer)
+PASS  no credential-bearing text in shipped files
+PASS  service worker active and controlling
+PASS  shell cache created  -- {"names":["obeos-pocket-shell-v2"],"count":7}
+PASS  launches offline from cached shell
+PASS  offline state shown to the user
+PASS  saves an edited https destination
+PASS  edited destination persists after reload
+PASS  rejects unsafe URL http://…
+PASS  rejects unsafe URL https://…
+PASS  rejects unsafe URL javascript://…
+PASS  restore defaults clears customisation
+PASS  redeployed content is served when online  -- OBEOS Pocket | Blackfong REDEPLOYED
+PASS  old shell cache removed, new cache active  -- ["obeos-pocket-shell-v3"]
+PASS  updated shell also launches offline
+PASS  no uncaught page errors
+
+ALL CHECKS PASSED
+exit=0

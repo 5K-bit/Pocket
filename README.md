@@ -47,7 +47,7 @@ python3 -m http.server 8000
 # Open http://localhost:8000
 ```
 
-The service worker works on HTTPS or localhost. Opening `index.html` directly from Files will not provide the complete install/offline behavior.
+The service worker registers only over HTTPS (the Netlify deployment). On `http://localhost` the launcher works but is not cached for offline use; opening `index.html` directly from Files also lacks install/offline behavior. `node scripts/acceptance-e2e.cjs` (needs Playwright) serves a copy over local HTTPS and checks offline launch, edits and update behavior.
 
 To deploy from Git: connect the **existing** OBEOS Pocket site in Netlify to **`5K-bit/Pocket`**, production branch **`main`**. The repository sets `[build] publish = "."`; no build command is required. Verify a **Published** deploy and test the same site URL on your iPhone before assuming a push has gone live.
 
