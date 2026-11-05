@@ -37,8 +37,17 @@ const form = document.querySelector('#editor-form');
 const error = document.querySelector('#form-error');
 const currentURL = item => Object.prototype.hasOwnProperty.call(customLinks, item.id) && customLinks[item.id] !== undefined ? customLinks[item.id] : item.url;
 
+// iOS cannot hand a link from one home-screen web app to another, so inside the installed Pocket the
+// installed-app tiles say so. They stay real links and still open in the browser as a fallback.
+const INSTALLED_APPS = ['link', 'citygrid'];
+function iosStandalone() {
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  return ios && standalone;
+}
 function makeTile(item) {
   const url = currentURL(item);
+  const homeScreenHint = Boolean(url) && INSTALLED_APPS.includes(item.id) && url === item.url && iosStandalone();
   const tile = document.createElement(url ? 'a' : 'button');
   tile.className = `tile${url ? '' : ' unconfigured'}`;
   if (url) {
@@ -53,12 +62,12 @@ function makeTile(item) {
   }
   const top = document.createElement('div'); top.className = 'tile-top';
   const symbol = document.createElement('span'); symbol.className = 'tile-icon'; symbol.textContent = item.initials;
-  const arrow = document.createElement('span'); arrow.className = 'tile-arrow'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = url ? '↗' : '+';
+  const arrow = document.createElement('span'); arrow.className = 'tile-arrow'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = homeScreenHint ? '⌂' : url ? '↗' : '+';
   top.append(symbol, arrow);
   const bottom = document.createElement('div'); bottom.className = 'tile-bottom';
   const category = document.createElement('div'); category.className = 'tile-category'; category.textContent = item.category;
   const name = document.createElement('div'); name.className = 'tile-name'; name.textContent = item.name;
-  const hint = document.createElement('div'); hint.className = 'tile-sub'; hint.textContent = url ? item.hint : 'Tap to configure HTTPS link';
+  const hint = document.createElement('div'); hint.className = 'tile-sub'; hint.textContent = homeScreenHint ? 'Open from your home screen' : url ? item.hint : 'Tap to configure HTTPS link';
   bottom.append(category, name, hint);
   tile.append(top, bottom);
   return tile;
