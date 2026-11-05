@@ -59,6 +59,19 @@ const check = (name, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'} 
     check('every tile opens safely (noopener noreferrer)', tiles.every(t => /noopener/.test(t.rel) && /noreferrer/.test(t.rel)));
     check('no credential-bearing text in shipped files', RUNTIME.filter(f => /\.(html|js|css|webmanifest)$/.test(f)).every(f => !/(?:token|secret|password|apikey|api_key)\s*[:=]\s*['"][^'"]{6,}/i.test(fs.readFileSync(path.join(root, f), 'utf8'))));
 
+    // 1b. iPhone home-screen app: installed-app tiles say so; desktop tiles do not
+    const desk = await page.$$eval('#tool-grid .tile-sub', els => els.map(e => e.textContent));
+    check('desktop shows no home-screen hint', !desk.includes('Open from your home screen'));
+    const ios = await browser.newContext({ ignoreHTTPSErrors: true, serviceWorkers: 'block', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148' });
+    await ios.addInitScript(() => Object.defineProperty(navigator, 'standalone', { value: true }));
+    const ip = await ios.newPage(); await ip.goto(base); await ip.waitForSelector('#tool-grid a');
+    const iosSubs = await ip.$$eval('#tool-grid .tile', els => els.map(e => ({ name: e.querySelector('.tile-name').textContent, sub: e.querySelector('.tile-sub').textContent, tag: e.tagName, href: e.href || '' })));
+    const linkTile = iosTile => iosTile.find(t => t.name === 'THE LINK');
+    check('iPhone home-screen app: THE LINK says "Open from your home screen"', linkTile(iosSubs).sub === 'Open from your home screen');
+    check('iPhone THE LINK tile is still a working link', linkTile(iosSubs).tag === 'A' && linkTile(iosSubs).href.startsWith('https://linkinobeos'));
+    check('iPhone: other tiles unchanged', iosSubs.find(t => t.name === 'Netlify').sub === 'Manage web deployments');
+    await ios.close();
+
     // 2. Service worker installs and caches the shell
     await page.evaluate(() => navigator.serviceWorker.ready);
     await page.reload(); await page.waitForSelector('#tool-grid a');
@@ -94,13 +107,13 @@ const check = (name, ok, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'} 
     check('restore defaults clears customisation', !(await page.$$eval('#tool-grid a', as => as.map(a => a.href))).includes('https://example.org/custom-path') && (await page.evaluate(() => localStorage.length)) === 0);
 
     // 5. Redeploy: new shell version must replace the old cache and content
-    const bumped = fs.readFileSync(path.join(site, 'service-worker.js'), 'utf8').replace('obeos-pocket-shell-v3', 'obeos-pocket-shell-v4');
+    const bumped = fs.readFileSync(path.join(site, 'service-worker.js'), 'utf8').replace('obeos-pocket-shell-v4', 'obeos-pocket-shell-v5');
     fs.writeFileSync(path.join(site, 'service-worker.js'), bumped);
     fs.writeFileSync(path.join(site, 'index.html'), fs.readFileSync(path.join(site, 'index.html'), 'utf8').replace('</title>', ' REDEPLOYED</title>'));
     await page.reload(); await page.waitForTimeout(2500); await page.reload(); await page.waitForTimeout(1500);
     const after = await page.evaluate(async () => ({ names: await caches.keys(), title: document.title }));
     check('redeployed content is served when online', /REDEPLOYED/.test(after.title), after.title);
-    check('old shell cache removed, new cache active', after.names.length === 1 && after.names[0] === 'obeos-pocket-shell-v4', JSON.stringify(after.names));
+    check('old shell cache removed, new cache active', after.names.length === 1 && after.names[0] === 'obeos-pocket-shell-v5', JSON.stringify(after.names));
     await context.setOffline(true); await page.reload(); await page.waitForSelector('#tool-grid a');
     check('updated shell also launches offline', /REDEPLOYED/.test(await page.title()));
     await context.setOffline(false);

@@ -2,6 +2,11 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- In the installed iPhone app, the THE LINK and CityGrid tiles read "Open from your home screen", because iOS cannot open one home-screen app from another. They remain links and still open in the browser.
+
 ## [0.2.0] - 2026-11-03
 
 ### Added
